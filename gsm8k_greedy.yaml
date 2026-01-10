@@ -1,0 +1,66 @@
+# Example configuration for LLM Reasoning Evaluation
+# Copy this file and modify for your experiments
+
+# Model configuration
+model:
+  # Type: vllm (recommended), hf (fallback), api, anthropic
+  type: vllm
+  
+  # Model name (HuggingFace model ID or path)
+  name: deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
+  
+  # vLLM-specific options
+  dtype: auto  # auto, float16, bfloat16
+  gpu_memory_utilization: 0.9  # Fraction of GPU memory to use
+  max_model_len: 4096  # Max sequence length (null = model default)
+  tensor_parallel_size: 1  # Number of GPUs for tensor parallelism
+
+# Sampling configuration
+sampler:
+  # Type: greedy, standard, nucleus, top_k, diverse, beam, simple_beam, best_first, mcts
+  type: greedy
+  
+  # Standard sampling params
+  temperature: 0.0  # 0 = greedy
+  top_p: 1.0
+  top_k: -1  # -1 = disabled
+  max_tokens: 2048
+  
+  # Tree search params (for best_first, mcts)
+  # max_expansions: 50
+  # branch_factor: 3
+  # tokens_per_step: 32
+
+# Dataset configuration
+dataset:
+  # Name: gsm8k, aime, ifeval, humaneval, mbpp
+  name: gsm8k
+  
+  # Dataset-specific options
+  split: test
+  use_cot_prompt: true  # For math datasets
+
+# Evaluator configuration
+evaluator:
+  # Type: accuracy, greedy, best_of_n, pass_at_k, majority_voting, self_consistency, weighted_voting
+  type: accuracy
+  
+  # For pass@k
+  # k_values: [1, 5, 10]
+  
+  # For majority_voting
+  # min_votes: 1
+  # weighted: false
+
+# Run configuration
+run:
+  batch_size: 8
+  n_samples: 1  # Samples per problem
+  max_problems: null  # null = all problems
+  verbose: true
+
+# Output configuration
+output:
+  dir: results
+  run_name: gsm8k_deepseek_1b_greedy
+  save_responses: true

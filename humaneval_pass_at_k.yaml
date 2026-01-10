@@ -1,0 +1,31 @@
+# HumanEval code generation with pass@k evaluation
+# Standard benchmark for code generation
+
+model:
+  type: vllm
+  name: deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
+  gpu_memory_utilization: 0.9
+
+sampler:
+  type: nucleus
+  temperature: 0.8
+  top_p: 0.95
+  max_tokens: 512
+
+dataset:
+  name: humaneval
+  timeout: 5.0  # Code execution timeout
+
+evaluator:
+  type: pass_at_k
+  k_values: [1, 5, 10]
+
+run:
+  batch_size: 4
+  n_samples: 20  # Need many samples for pass@k
+  max_problems: null
+  verbose: true
+
+output:
+  dir: results
+  run_name: humaneval_pass_at_k

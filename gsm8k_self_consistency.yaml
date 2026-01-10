@@ -1,0 +1,32 @@
+# Self-consistency evaluation with majority voting
+# This generates multiple samples and uses majority vote for final answer
+
+model:
+  type: vllm
+  name: deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
+  gpu_memory_utilization: 0.9
+
+sampler:
+  type: diverse  # Uses varied temperatures for diversity
+  temperatures: [0.3, 0.5, 0.7, 0.9, 1.0]
+  top_p: 0.95
+  max_tokens: 2048
+
+dataset:
+  name: gsm8k
+  split: test
+  use_cot_prompt: true
+
+evaluator:
+  type: self_consistency
+  n_samples: 8
+
+run:
+  batch_size: 4  # Smaller batch for more samples
+  n_samples: 8
+  max_problems: 100  # Quick test
+  verbose: true
+
+output:
+  dir: results
+  run_name: gsm8k_self_consistency
