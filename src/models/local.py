@@ -24,6 +24,8 @@ class VLLMModel(BaseModel):
         max_model_len: Optional[int] = None,
         tensor_parallel_size: int = 1,
         seed: int = 42,
+        enforce_eager: bool = False,
+        **kwargs,
     ):
         """
         Initialize vLLM model.
@@ -35,6 +37,8 @@ class VLLMModel(BaseModel):
             max_model_len: Maximum sequence length (None = model default)
             tensor_parallel_size: Number of GPUs for tensor parallelism
             seed: Random seed for reproducibility
+            enforce_eager: Whether to enforce eager execution (useful for Colab/T4)
+            **kwargs: Additional arguments passed to vLLM engine
         """
         from vllm import LLM, SamplingParams
         
@@ -50,6 +54,8 @@ class VLLMModel(BaseModel):
             tensor_parallel_size=tensor_parallel_size,
             seed=seed,
             trust_remote_code=True,
+            enforce_eager=enforce_eager,
+            **kwargs,
         )
         
         self.tokenizer = self.llm.get_tokenizer()
